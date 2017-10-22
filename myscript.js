@@ -225,7 +225,7 @@ var Dictionary_Word = function(word, frequency)   {
           this.frequency = 1;
           this.matched = false;
 }
-input_str = ['video_cro_network_id', 'video_cro_asset_id', 'video_cro_asset_group_id', 'video_cro_context_id', 'site_section_cro_network_id', 'site_section_cro_asset_id'];
+input_str = [];
 
 libirary_words = new Array();
 for (var i=0; i<input_str.length; ++i) {

@@ -2,7 +2,7 @@
   "manifest_version": 2,
 
   "name": "Memory Auto Complete",
-  "description": "This extension allows the user to change the background color of the current page.",
+  "description": "This extension is for Ace Editor auto completion, based on input history.",
   "version": "1.0",
 
   "options_ui": {
@@ -17,17 +17,12 @@
   "content_scripts": [
     {
       "run_at" : "document_start",
-      "matches": ["file:///Users*", "http://logquery.fwmrm.net/"],
+      "matches": ["file:///Users*"],
       "js": ["jquery-3.2.1.min.js", "prescript.js"]
     },
-    // {
-    //   "run_at" : "document_idle",
-    //   "matches": ["file:///Users*", "http://logquery.fwmrm.net/"],
-    //   "js": ["jquery-3.2.1.min.js", "postscript.js"]
-    // }
     {
       "run_at" : "document_end",
-      "matches": ["file:///Users*", "http://logquery.fwmrm.net/"],
+      "matches": ["file:///Users*"],
       "css": ["my.css"],
       "js": ["jquery-3.2.1.min.js", "fuse.min.js", "myscript.js"]
     }
