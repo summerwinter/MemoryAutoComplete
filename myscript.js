@@ -61,9 +61,10 @@ var dict = {
 		// console.log(this.words_list);
 		// console.log(this.words_list_map);
 
-		if (word.length == 0) {
+		if (word.length <= 3) {
 			return;
 		}
+
 		var idx = -1;
 		if (word in this.words_list_map) {
 			idx = this.words_list_map[word]
