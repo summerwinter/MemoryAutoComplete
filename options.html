@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Memory Auto Complete Configuration</title>
+  <script type="text/javascript" src="jquery-3.2.1.min.js"></script>
+  <script type="text/javascript" src="popper.min.js"></script>
+  <script type="text/javascript" src="bootstrap.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="bootstrap.min.css">
+  <script type="text/javascript" src="options.js"></script>
+</head>
+<body>
+  <div class="container">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <a class="navbar-brand" href="#">Memory Auto Complete</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+    <div class="navbar-nav">
+      <a class="nav-item nav-link active" data="hello_page" href="#">Home</a>
+      <a class="nav-item nav-link" data="view_page" href="#">View Auto Complete List</a>
+      <a class="nav-item nav-link" data="configure_page" href="#">Configure Auto Complete List</a>
+    </div>
+  </div>
+</nav><br />
+<div id="hello_page" style="display:none;" class="jumbotron child_page">
+  <h1 class="display-3">Hello, world!</h1>
+  <p class="lead">You can configure something here!</p>
+</div>
+<div id="view_page" style="display:none;" class="child_page">
+  <div class="alert alert-success" role="alert">
+  From this page, you can see keywords and their frequencies for different url tabs!
+</div>
+  <div class="form-group">
+    <label for="auto_complete_url_keys_select">Auto Complete Url Keys:</label>
+    <select id="auto_complete_url_keys_select" class="form-control">
+    </select>
+  </div><br />
+    <ul class="list-group" id="auto_complete_url_vals">
+</ul>
+</div>
+<div id="configure_page" style="display:none;" class="child_page">
+  <div class="alert alert-success" role="alert">
+  From this page, you can configure predefined keywords for url tab, and after that, refersh web to see the effect!
+</div>
+  <div class="form-group">
+    <label for="auto_complete_url_keys_select_for_configure">Auto Complete Url Keys:</label>
+    <select id="auto_complete_url_keys_select_for_configure" class="form-control">
+    </select>
+  <div /><br />
+
+  <button id="delete_storage_btn" type="button" class="btn btn-danger">delete storage of this url</button>
+  <button id="clear_data_btn" type="button" class="btn btn-warning">clear keywords of this url</button>
+  <button id="add_data_btn" type="button" class="btn btn-success">add predefined keywords for this url</button><br /><br />
+  <div class="form-group">
+    <label for="auto_complete_data_textarea">add your predefined keywords here:</label>
+    <textarea style="height: 300px;" class="form-control" id="auto_complete_data_textarea" rows="3" placeholder="summer,winter&#10;&#10;or&#10;&#10;summer, winter&#10;&#10;or&#10;&#10;summer&#10;winter"></textarea>
+  </div>
+</div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,40 @@
+{
+  "manifest_version": 2,
+
+  "name": "Memory Auto Complete",
+  "description": "This extension allows the user to change the background color of the current page.",
+  "version": "1.0",
+
+  "options_ui": {
+    "page": "options.html",
+    "chrome_style": false,
+    "open_in_tab": true
+  },
+  "browser_action": {
+    "default_icon": "icon.png",
+    "default_popup": "popup.html"
+  },
+  "content_scripts": [
+    {
+      "run_at" : "document_start",
+      "matches": ["file:///Users*", "http://logquery.fwmrm.net/"],
+      "js": ["jquery-3.2.1.min.js", "prescript.js"]
+    },
+    // {
+    //   "run_at" : "document_idle",
+    //   "matches": ["file:///Users*", "http://logquery.fwmrm.net/"],
+    //   "js": ["jquery-3.2.1.min.js", "postscript.js"]
+    // }
+    {
+      "run_at" : "document_end",
+      "matches": ["file:///Users*", "http://logquery.fwmrm.net/"],
+      "css": ["my.css"],
+      "js": ["jquery-3.2.1.min.js", "fuse.min.js", "myscript.js"]
+    }
+  ],
+  "permissions": [
+    "tabs",
+    "activeTab",
+    "storage"
+  ]
+}

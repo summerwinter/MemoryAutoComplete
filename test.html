@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<link rel="stylesheet" type="text/css" href="bootstrap.min.css">
+	<script type="text/javascript" src="jquery-3.2.1.min.js"></script>
+	<script type="text/javascript" src="jquery.textcomplete.min.js"></script>
+	<script type="text/javascript" src="textarea.caret.position.js"></script>
+	<script type="text/javascript" src="jquery.autotype.js"></script>
+	<script type="text/javascript" src="fuse.min.js"></script>
+	<script type="text/javascript">
+
+		$(document).ready(function() {
+			// console.log("page add event");
+			// var func = function(event) {
+			// 	console.log("page keydown");
+			// }
+			// $("textarea.test")[0].addEventListener("keydown", func);
+			// $("textarea.test")[0].addEventListener("keydown", func);
+			// console.log($("textarea.test")[0].eventListenerList);
+		});
+
+		var arr = [
+			{
+				word: "summer",
+				freq: 2
+			},
+			{
+				word: "summerwinter",
+				freq: 10
+			}
+		];
+		var options = {
+			keys: ["word"],
+			id: "word",
+			shouldSort: true,
+			sortFn: function(a, b) {
+				if (Math.abs(a.score - b.score) < 0.01) {
+					return a.item.freq < b.item.freq;
+				}
+				return a.score - b.score;
+			}
+		};
+
+		var fuse = new Fuse(arr, options);
+		var result = fuse.search("sum");
+		console.log(result);
+		arr[0].freq = 20;
+		result = fuse.search("sum");
+		console.log(result);
+
+	</script>
+</head>
+<body>
+	<textarea class="test"></textarea>
+	<script type="text/javascript">
+		// console.log("summer");
+		$("textarea.test")[0].addEventListener("keydown", function(event) {
+				console.log("page keydown");
+			})
+		console.log($("textarea.test")[0].eventListenerList);
+	</script>
+	<button data="summer" id="button1" onclick="javascript: alert('winter'); $('#button2').click(); ">click me1</button>
+	<button data="summer" id="button2" style="display: none;" onclick="javascript: alert('summer'); ">click me2</button>
+</body>
+</html>
