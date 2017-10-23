@@ -335,6 +335,17 @@ $( window ).bind("beforeunload",function() {
 var textComplete = {
 	init : function(){
 		$("body").append("<div id='my_popup' style='max-width: 500px;min-width: 50px;word-wrap: break-word; z-index: 10000;'></div>");
+
+		$("#my_popup").on("click", "li span.extension-word-del", function(e) {
+			e.stopPropagation();
+			dict.del_word($(this).parent().attr("data"));
+			textComplete.draw($("#my_popup ul").attr("prefix"));
+			editor_focus();
+		});
+
+		$("#my_popup").on("click", "li", function(e) {
+			textComplete.trigger($(this).attr("data"));
+		});
 	},
 	hide: function(){
 		$("#my_popup").hide();
@@ -371,16 +382,6 @@ var textComplete = {
 			$("#my_popup").html(html);
 			$($("#my_popup li")[0]).addClass("active");
 			$("#my_popup").offset({top: offset.top + 17, left: offset.left});
-			$("#my_popup li").click(function(){
-    			textComplete.trigger($(this).attr("data"));
-			});
-			$("#my_popup li span.extension-word-del").click(function(e) {
-				e.stopPropagation();
-				// dictionary.del_word($(this).parent().attr("data"));
-				dict.del_word($(this).parent().attr("data"));
-				textComplete.draw($("#my_popup ul").attr("prefix"));
-				editor_focus();
-			});
 		}
 	},
 	trigger : function(word){

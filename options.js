@@ -67,6 +67,33 @@ $(document).ready(function() {
         });
     });
 
+    $("#auto_complete_url_vals").on("click", "li span.extension-word-del", function(e) {
+        e.stopPropagation();
+        var key = $("#auto_complete_url_keys_select").val();
+        var selected_word = $(this).parent().attr("data");
+        chrome.storage.local.get(key, function(items) {
+            if (key in items) {
+                var values = items[key];
+                var selected_idx = -1;
+                values.forEach(function(element, idx) {
+                    if (element.word == selected_word) {
+                        selected_idx = idx;
+                        return false;
+                    }
+                });
+                if (selected_idx != -1) {
+                    values.splice(selected_idx, 1);
+                    items = {}
+                    items[key] = values;
+                    chrome.storage.local.set(items, function() {
+                        update_auto_complete_list($("#auto_complete_url_keys_select").val());
+                        alert("delete element successed!");
+                    });
+                }
+            }
+        });
+    });
+
     function update_auto_complete_list(key) {
         $("#auto_complete_url_vals").html("");
         chrome.storage.local.get(key, function(items) {
@@ -80,31 +107,6 @@ $(document).ready(function() {
                     html += '<li class="list-group-item d-flex justify-content-between align-items-center" data="' + element.word + '">' + element.word + '<span class="extension-word-del badge badge-primary badge-pill">' + element.freq + ' X</span></li>';
                 });
                 $("#auto_complete_url_vals").html(html);
-                $("#auto_complete_url_vals li span.extension-word-del").click(function(e) {
-                    e.stopPropagation();
-                    var selected_word = $(this).parent().attr("data");
-                    chrome.storage.local.get(key, function(items) {
-                        if (key in items) {
-                            var values = items[key];
-                            var selected_idx = -1;
-                            values.forEach(function(element, idx) {
-                                if (element.word == selected_word) {
-                                    selected_idx = idx;
-                                    return false;
-                                }
-                            });
-                            if (selected_idx != -1) {
-                                values.splice(selected_idx, 1);
-                                items = {}
-                                items[key] = values;
-                                chrome.storage.local.set(items, function() {
-                                    update_auto_complete_list($("#auto_complete_url_keys_select").val());
-                                    alert("delete element successed!");
-                                });
-                            }
-                        }
-                    });
-            });
             }
         });
     }
