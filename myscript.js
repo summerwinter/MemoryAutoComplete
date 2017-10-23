@@ -1,3 +1,7 @@
+function myscript_init() {
+	if ($(".ace_editor").length == 0)
+		return;
+
 var listen_keyboard = true;
 var suggestion_num_config = 5;
 var last_prefix = "";
@@ -572,3 +576,7 @@ event_handler.init();
 // dictionary.init()
 dict.init();
 editor_focus();
+
+}
+
+myscript_init();
