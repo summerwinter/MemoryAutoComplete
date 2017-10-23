@@ -26,8 +26,6 @@ $(document).ready(function() {
         items[key] = new Array();
         chrome.storage.local.set(items, function() {
             update_auto_complete_list($("#auto_complete_url_keys_select").val());
-            // console.log("clear data");
-            // console.log(chrome.runtime.lastError);
             alert("clear data successed!");
         });
     });
@@ -64,8 +62,6 @@ $(document).ready(function() {
             items[key] = cur_vals;
             chrome.storage.local.set(items, function() {
                 update_auto_complete_list($("#auto_complete_url_keys_select").val());
-                // console.log("add data");
-                // console.log(chrome.runtime.lastError);
                 alert("add data successed!");
             });
         });
@@ -77,13 +73,38 @@ $(document).ready(function() {
             if (key in items) {
                 var values = items[key];
                 values.sort(function(a, b) {
-                    return a.freq < b.freq;
+                    return b.freq - a.freq;
                 });
                 var html = "";
                 values.forEach(function(element, idx) {
-                    html += '<li class="list-group-item d-flex justify-content-between align-items-center">' + element.word + '<span class="badge badge-primary badge-pill">' + element.freq + '</span></li>';
+                    html += '<li class="list-group-item d-flex justify-content-between align-items-center" data="' + element.word + '">' + element.word + '<span class="extension-word-del badge badge-primary badge-pill">' + element.freq + ' X</span></li>';
                 });
                 $("#auto_complete_url_vals").html(html);
+                $("#auto_complete_url_vals li span.extension-word-del").click(function(e) {
+                    e.stopPropagation();
+                    var selected_word = $(this).parent().attr("data");
+                    chrome.storage.local.get(key, function(items) {
+                        if (key in items) {
+                            var values = items[key];
+                            var selected_idx = -1;
+                            values.forEach(function(element, idx) {
+                                if (element.word == selected_word) {
+                                    selected_idx = idx;
+                                    return false;
+                                }
+                            });
+                            if (selected_idx != -1) {
+                                values.splice(selected_idx, 1);
+                                items = {}
+                                items[key] = values;
+                                chrome.storage.local.set(items, function() {
+                                    update_auto_complete_list($("#auto_complete_url_keys_select").val());
+                                    alert("delete element successed!");
+                                });
+                            }
+                        }
+                    });
+            });
             }
         });
     }

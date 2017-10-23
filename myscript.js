@@ -23,6 +23,10 @@ var dict = {
     	this.save_storage();
     },
     save_storage: function() {
+    	if (dict.changed)
+    		dict.changed = false;
+    	else
+    		return;
     	var url = window.location.href;
     	var key = url + "_words";
     	var items = {}
@@ -44,10 +48,7 @@ var dict = {
 		});
 
 		setInterval(function() {
-			if (dict.changed) {
-				dict.save_storage();
-				dict.changed = false;
-			}
+			dict.save_storage();
 		}, 5000);
 	},
 	construct_list_map: function() {
