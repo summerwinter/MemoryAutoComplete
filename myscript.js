@@ -17,7 +17,7 @@ var dict = {
 		shouldSort: true,
 		sortFn: function(a, b) {
 			if (Math.abs(a.score - b.score) < 0.01) {
-				return a.item.freq < b.item.freq;
+				return a.item.freq - b.item.freq;
 			}
 			return a.score - b.score;
 		}
