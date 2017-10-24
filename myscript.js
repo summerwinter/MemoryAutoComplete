@@ -6,6 +6,7 @@ var listen_keyboard = true;
 var suggestion_num_config = 5;
 var last_prefix = "";
 var editor_enabled = true;
+var debug = false;
 
 var dict = {
 	changed: false,
@@ -14,6 +15,17 @@ var dict = {
 	fuse_options: {
 		keys: ["word"],
 		id: "word",
+		shouldSort: true,
+		sortFn: function(a, b) {
+			if (Math.abs(a.score - b.score) < 0.01) {
+				return a.item.freq - b.item.freq;
+			}
+			return a.score - b.score;
+		}
+	},
+	fuse_debug_options: {
+		keys: ["word"],
+		includeScore: true,
 		shouldSort: true,
 		sortFn: function(a, b) {
 			if (Math.abs(a.score - b.score) < 0.01) {
@@ -39,7 +51,10 @@ var dict = {
     	});
     },
 	init: function() {
-		this.fuse = new Fuse(this.words_list, this.fuse_options);
+		if (debug == false)
+			this.fuse = new Fuse(this.words_list, this.fuse_options);
+		else
+			this.fuse = new Fuse(this.words_list, this.fuse_debug_options);
 
 		var url = window.location.href;
 		var key = url + "_words";
@@ -379,7 +394,10 @@ var textComplete = {
 			var html = '';
 			html += '<ul class="list-group" prefix="' + prefix + '">';
 			for (i = 0, len = words.length; i < len; i++){
-				html += '<li style="padding: 5px 5px;" class="list-group-item d-flex justify-content-between align-items-center" data="' + words[i] + '">' + words[i] + '<span class="extension-word-del badge badge-primary badge-pill">X</span></li>';
+				if (debug == false)
+					html += '<li style="padding: 5px 5px;" class="list-group-item d-flex justify-content-between align-items-center" data="' + words[i] + '">' + words[i] + '<span class="extension-word-del badge badge-primary badge-pill">X</span></li>';
+				else
+					html += '<li style="padding: 5px 5px;" class="list-group-item d-flex justify-content-between align-items-center" data="' + words[i].item.word + '">' + words[i].item.word + " " + words[i].item.freq + " " + words[i].score + '<span class="extension-word-del badge badge-primary badge-pill">X</span></li>';
 			}
 			html += '</ul>';
 			offset = this.get_position();
