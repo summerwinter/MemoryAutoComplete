@@ -68,7 +68,7 @@ var dict = {
 
 		setInterval(function() {
 			dict.save_storage();
-		}, 5000);
+		}, 10000);
 	},
 	construct_list_map: function() {
 		dict.words_list_map = {}
@@ -440,6 +440,10 @@ var textComplete = {
 	}
 };
 
+$(".ace_editor").click(function() {
+	textComplete.hide();
+});
+
 var event_handler = {
 	cur_word : "",
 	split_keys : new Array(),
@@ -518,16 +522,16 @@ var event_handler = {
 		// 18 alt
 		// 91 command
 		// 13 enter
-		// 44 ,
+		// 188 ,
 		// 186 ;
 		// 222 '"
 		// 40 (
 		// 41 )
-		// 47 /
-		// 92 \
-		// 61 =
-		// 46 .
-		this.split_keys = [32, 13, 44, 186, 222, 40, 41, 47, 92, 61, 46]
+		// 191 /
+		// 220 \
+		// 187 =
+		// 190 .
+		this.split_keys = [32, 13, 188, 186, 222, 40, 41, 191, 220, 187, 190]
 		// 16 shift
 		// 42 *  
 		this.ignore_keys = [16, 42]
