@@ -3,7 +3,7 @@
 
   "name": "Memory Auto Complete",
   "description": "This extension is for Ace Editor auto completion, based on input history.",
-  "version": "1.0",
+  "version": "1.1",
 
   "options_ui": {
     "page": "options.html",
