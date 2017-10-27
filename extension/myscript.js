@@ -125,7 +125,18 @@ var dict = {
 		// console.log(this.words_list_map);
 	},
 	search: function(word) {
-		return this.fuse.search(word).slice(0, suggestion_num_config);
+		var result = this.fuse.search(word);
+		// not show same word
+		if (result.length > 0 &&
+		    ((debug && result[0].item.word == word) ||
+		     (!debug && result[0] == word)
+		    )
+		   ) {
+			return result.slice(1, suggestion_num_config);
+		}
+		else {
+			return result.slice(0, suggestion_num_config);
+		}
 	}
 };
 
