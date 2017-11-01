@@ -133,7 +133,9 @@ $(document).ready(function() {
             var html = '';
             var idx = 1;
             for (key in items) {
-                html += '<option value="' + key + '">' + key + '</option>';
+                if (!key.endsWith("_words"))
+                    continue;
+                html += '<option value="' + key + '">' + key.substr(0, key.length - 6) + '</option>';
                 idx += 1;
             }
             $("#auto_complete_url_keys_select_for_configure").html(html);
