@@ -1,9 +1,14 @@
+// global functions or variables to be invoked
+function show_welcome() {
+	$("#extension_intro_btn").click();
+}
+var suggestion_num_config = 5;
+
 function myscript_init() {
 	if ($(".ace_editor").length == 0)
 		return;
 
 var listen_keyboard = true;
-var suggestion_num_config = 5;
 var last_prefix = "";
 var editor_enabled = true;
 var debug = false;
@@ -140,6 +145,13 @@ var dict = {
 	}
 };
 
+var manifest = chrome.runtime.getManifest();
+var extension_version = manifest.version;
+var how_to_use = 'This extension is for Ace Editor auto completion, based on input history.<h4>How to use?</h4><ul><li>The first time you use it, there is nothing for auto completion. Don\'t worry, just type it.</li><li>Use <b>Tab</b> to change selection</li><li>Use <b>Enter</b> or <b>Click</b> to input selection</li><li>Click <b>extension icon</b>(top right corner) to find more functions<ul><li>Change suggestion num</li><li>Configure your auto completion dictionary</li></ul></li></ul>';
+var improvements = '<h5>V' + extension_version + ' improvements:</h5><ul><li>add help document</li></ul>';
+
+$("body").append('<button id="extension_intro_btn" type="button" class="btn btn-primary" data-toggle="modal" data-target="#extensionIntroModal"></button><!-- Modal --><div class="modal fade" id="extensionIntroModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true"><div class="modal-dialog" role="document"><div class="modal-content"><div class="modal-header"><h3 class="modal-title" id="exampleModalLabel">Welcome</h3></div><div class="modal-body">' + how_to_use + improvements + '</div><div class="modal-footer"><button type="button" class="btn btn-primary" data-dismiss="modal">I got it~</button></div></div></div></div>');
+
 $("body").append('<button id="extension_btn_test" style="display: none;" data="" onclick="javascript: var pos = extension_editor.getCursorPosition(); var word_range = extension_editor_session.getWordRange(pos.row, pos.column); console.log(pos); console.log(word_range);"></button>');
 $("body").append('<button id="extension_insert_str" style="display: none;" data="" onclick="javascript: extension_editor.insert($(this).attr(\'data\'));"></button>');
 $("body").append('<button id="extension_focus" style="display: none;" data="" onclick="javascript: extension_editor.focus();"></button>');
@@ -160,6 +172,26 @@ function init_ace() {
 }
 
 init_ace();
+
+function welcome() {
+	var url = window.location.href;
+	var key = url + "_version";
+	chrome.storage.local.get(key, function(items) {
+		if (key in items) {
+			var storage_version = items[key];
+			if (storage_version == extension_version) {
+				return;
+			}
+		}
+		items = {}
+		items[key] = extension_version;
+
+		chrome.storage.local.set(items, function() {});
+		show_welcome();
+	});
+}
+
+welcome();
 
 window.addEventListener("message", function(event) {
 	// console.log(event);

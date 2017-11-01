@@ -135,6 +135,12 @@ function go_to_options() {
   }
 }
 
+function my_help() {
+  chrome.tabs.executeScript({
+    code: "show_welcome()"
+  });
+}
+
 // This extension loads the saved background color for the current tab if one
 // exists. The user can select a new background color from the dropdown for the
 // current page, and it will be saved as part of the extension's isolated
@@ -145,6 +151,7 @@ function go_to_options() {
 // user devices.
 document.addEventListener('DOMContentLoaded', () => {
   document.getElementById("go-to-options").addEventListener("click", go_to_options);
+  document.getElementById("help").addEventListener("click", my_help);
   chrome.tabs.executeScript(null, {file: "content_script.js"});
   getCurrentTabUrl((url) => {
     var dropdown = document.getElementById('dropdown');
