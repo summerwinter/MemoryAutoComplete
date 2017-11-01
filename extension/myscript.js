@@ -416,6 +416,7 @@ $(".ace_editor").click(function() {
 var event_handler = {
 	cur_word : "",
 	split_keys : new Array(),
+	no_shift_split_keys : new Array(),
 	ignore_keys : new Array(),
 	active_modifiers: {
         alt: false,
@@ -478,7 +479,7 @@ var event_handler = {
 				continue;
 			if (48 <= idx && idx <= 57)
 				continue;
-			if (str[i] == '-' || str[i] == '_')
+			if (str[i] == '_')
 				continue;
 			return false;
 		}
@@ -501,6 +502,8 @@ var event_handler = {
 		// 187 =
 		// 190 .
 		this.split_keys = [32, 13, 188, 186, 222, 40, 41, 191, 220, 187, 190]
+		// 189 -
+		this.no_shift_split_keys = [189]
 		// 16 shift
 		// 42 *  
 		this.ignore_keys = [16, 42]
@@ -546,7 +549,10 @@ var event_handler = {
 			if (!event_handler.is_valid(prefix))
 				prefix = "";
 			// console.log(last_prefix + " " + last_prefix.length + " " + prefix + " " + prefix.length + " " + event.keyCode);
-			if (prefix.length == 0 && last_prefix.length > 0 && event_handler.split_keys.includes(event.keyCode)) {
+			if (prefix.length == 0 && last_prefix.length > 0 &&
+			    (event_handler.split_keys.includes(event.keyCode) ||
+			     (event_handler.no_shift_split_keys.includes(event.keyCode) && event_handler.active_modifiers.shift == false)
+			    )) {
 				// dictionary.store_words(last_prefix);
 				dict.store_word(last_prefix);
 			}
