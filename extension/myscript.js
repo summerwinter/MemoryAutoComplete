@@ -321,6 +321,21 @@ var textComplete = {
 			this.hide();
 			return;
 		}
+		// not show when only one or two digitals
+		if (prefix.length <= 2) {
+			var alpha = false;
+			for (var i = 0, len = prefix.length; i < len; ++i) {
+				var idx = prefix[i].charCodeAt(0);
+				if (!(48 <= idx && idx <= 57)) {
+					alpha = true;
+					break;
+				}
+			}
+			if (alpha == false) {
+				this.hide();
+				return;
+			}
+		}
 		// var words = dictionary.pre_match(prefix)
 		var words = dict.search(prefix)
 		if(words.length == 0){
@@ -455,7 +470,7 @@ var event_handler = {
 	is_valid: function(str) {
 		if (str.length == 0)
 			return false;
-		for (var i = 0; i < str.length; ++i) {
+		for (var i = 0, len = str.length; i < len; ++i) {
 			var idx = str[i].charCodeAt(0);
 			if (97 <= idx && idx <= 122)
 				continue;
