@@ -12,7 +12,15 @@ $(document).ready(function() {
     });
 
     $("#delete_storage_btn").click(function() {
+        if ($("#auto_complete_url_keys_select_for_configure option").length == 0) {
+            alert("Please use this extension in your website for a while!");
+            return;
+        }
         var key = $("#auto_complete_url_keys_select_for_configure").val();
+        var selected_text = $("#auto_complete_url_keys_select_for_configure option:selected").text();
+        var result = confirm("Have you confirmed that you will delete storage for " + selected_text + "?");
+        if (result == false)
+            return;
         chrome.storage.local.remove(key, function() {
             update_auto_complete_url_keys();
             update_auto_complete_url_keys_for_configure();
@@ -21,7 +29,15 @@ $(document).ready(function() {
     });
 
     $("#clear_data_btn").click(function() {
+        if ($("#auto_complete_url_keys_select_for_configure option").length == 0) {
+            alert("Please use this extension in your website for a while!");
+            return;
+        }
         var key = $("#auto_complete_url_keys_select_for_configure").val();
+        var selected_text = $("#auto_complete_url_keys_select_for_configure option:selected").text();
+        var result = confirm("Have you confirmed that you will clear data for " + selected_text + "?");
+        if (result == false)
+            return;
         var items = {};
         items[key] = new Array();
         chrome.storage.local.set(items, function() {
@@ -34,7 +50,15 @@ $(document).ready(function() {
         var val = $("#auto_complete_data_textarea").val();
         val = val.replace("\n", ",");
         val = val.replace(" ", "");
+        if (val.length == 0) {
+            alert("No valid input!");
+            return;
+        }
         var keywords = val.split(",");
+        if (keywords.length == 0) {
+            alert("No valid input!");
+            return;
+        }
         var key = $("#auto_complete_url_keys_select_for_configure").val();
         chrome.storage.local.get(key, function(items) {
             var cur_vals = {};
