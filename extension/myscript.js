@@ -147,8 +147,8 @@ var dict = {
 
 var manifest = chrome.runtime.getManifest();
 var extension_version = manifest.version;
-var how_to_use = 'This extension is for Ace Editor auto completion, based on input history.<h4>How to use?</h4><ul><li>The first time you use it, there is nothing for auto completion. Don\'t worry, just type it.</li><li>Use <b>Tab</b> to change selection</li><li>Use <b>Enter</b> or <b>Click</b> to input selection</li><li>Click <b>extension icon</b>(top right corner) to find more functions<ul><li>Change suggestion num</li><li>Configure your auto completion dictionary</li></ul></li></ul>';
-var improvements = '<h5>V' + extension_version + ' improvements:</h5><ul><li>add help document</li></ul>';
+var how_to_use = 'This extension is for Ace Editor auto completion, based on input history.<h4>How to use?</h4><ul><li>The first time you use it, there is nothing for auto completion. Don\'t worry, just type it.</li><li>Use <b>Tab, Up, Down</b> to change selection</li><li>Use <b>Enter</b> or <b>Click</b> to input selection</li><li>Click <b>extension icon</b>(top right corner) to find more functions<ul><li>Change suggestion num</li><li>Configure your auto completion dictionary</li></ul></li></ul>';
+var improvements = '<h5>ChangeLog</h5><ul><li>V1.5: add more shortcut keys</li><li>V1.4: add help document</li></ul>';
 
 $("body").append('<button id="extension_intro_btn" type="button" class="btn btn-primary" data-toggle="modal" data-target="#extensionIntroModal"></button><!-- Modal --><div class="modal fade" id="extensionIntroModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true"><div class="modal-dialog" role="document"><div class="modal-content"><div class="modal-header"><h3 class="modal-title" id="exampleModalLabel">Welcome</h3></div><div class="modal-body">' + how_to_use + improvements + '</div><div class="modal-footer"><button type="button" class="btn btn-primary" data-dismiss="modal">I got it~</button></div></div></div></div>');
 
@@ -284,113 +284,7 @@ function auto_complete_word(prefix, complete_word) {
 	editor_remove_and_insert_str(prefix, complete_word);
 }
 
-var Dictionary_Word = function(word, frequency)   {
-          this.word = word;
-          this.frequency = 1;
-          this.matched = false;
-}
-input_str = [];
-
-libirary_words = new Array();
-for (var i=0; i<input_str.length; ++i) {
-    word = input_str[i];
-    libirary_words.push(word);
-}
-
-function match_libirary_words(num, match_word)
-	{
-		var top_n_words = new Array();
-		for (var i = 0; i < libirary_words.length; i++)
-		{	
-			if (libirary_words[i].match("^" + match_word))
-			{
-				top_n_words.push(libirary_words[i]);
-			}
-			if (top_n_words.length >= num)
-				break;
-		}
-		// console.log(top_n_words);
-		return top_n_words;
-	}
-
-var dictionary = {
-    words : new Array(),
-    destructor : function(){
-    	chrome.storage.local.set({ "words": dictionary.words}, function(){
-    	});
-    },
-    default_words: function(){
-    	// for (var i = library_word.length - 1; i >= 0; i--) {
-    	// 		this.store_words(library_word[i])
-    	// }
-    },
-    init : function(){
-    	chrome.storage.local.get("words", function(items){
-    		if (items['words']){
-    			for (var i = items['words'].length - 1; i >= 0; i--) {
-    				dictionary.words.push(items['words'][i])
-    			}
-    		}
-    		else{
-    			console.log("load dfault words")
-    			dictionary.default_words()
-    		}
-		});
-    },
-    store_words : function(word){
-    	console.log("store word: " + word)
-        for(var i = 0; i < this.words.length; i++)
-        {
-            if(this.words[i].word == word)
-            {
-            	// console.log("add frequency" + word)
-                this.words[i].frequency += 1
-                // console.log("add frequency" + this.words[i].frequency)
-                return
-            }
-        }    
-        var new_word = new Dictionary_Word(word, 1)
-        this.words.push(new_word)
-    },
-    del_word : function(word) {
-    	var old_words = this.words;
-    	this.words = new Array();
-    	for(var i = 0; i < old_words.length; i++)
-        {
-            if(old_words[i].word != word)
-            {
-            	this.words.push(old_words[i]);
-            }
-        }    
-    },
-    pre_match : function(match_word){
-        var matched_words = new Array();
-        if (match_word.length == 0) return matched_words
-        for(var i = 0;i < this.words.length; i++)
-        {
-            this.words[i].matched = false;
-            var patten = new RegExp("^" + match_word);
-            if (this.words[i].word.match(patten))
-                this.words[i].matched = true;
-        }
-        for(i = 0; i < this.words.length; i++)
-        {
-            if (this.words[i].matched)
-                matched_words.push(this.words[i])
-        }
-        matched_words.sort(function(a, b) {return b.frequency - a.frequency})
-
-        matched_words = matched_words.slice(0, suggestion_num_config)
-
-        if (matched_words.length < suggestion_num_config)
-        	matched_words.push(...match_libirary_words(suggestion_num_config - matched_words.length, match_word.word));
-
-        return matched_words;
-    }
-}
-
 $( window ).bind("beforeunload",function() {
-       // return dictionary.destructor()
        dict.destructor();
 });
 
@@ -470,6 +364,23 @@ var textComplete = {
 			}
 		});
 		$($("#my_popup li")[(has_class_idx + 1 + $("#my_popup li").length) % $("#my_popup li").length]).addClass("active");
+		return true;
+	},
+	prev : function() {
+		if (!this.visible())
+			return false;
+		if ($("#my_popup li").length <= 1)
+			return true;
+		var last_set_found = false;
+		var next_set = false;
+		var has_class_idx = 0;
+		$("#my_popup li").each(function(idx, obj) {
+			if ($(obj).hasClass("active")) {
+				$(obj).removeClass("active");
+				has_class_idx = idx;
+			}
+		});
+		$($("#my_popup li")[(has_class_idx - 1 + $("#my_popup li").length) % $("#my_popup li").length]).addClass("active");
 		return true;
 	},
 	select : function() {
@@ -591,15 +502,26 @@ var event_handler = {
 			if (event.keyCode == 16) {
 				event_handler.active_modifiers.shift = false;
 			}
+			// ESC hide
+			if (event.keyCode == 27) {
+				textComplete.hide();
+				return;
+			}
 			if (textComplete.visible() == true) {
-				if (event.keyCode == 9)
-				{
+				// Tab, Up
+				if (event.keyCode == 9 || event.keyCode == 40) {
 					textComplete.next();
 					editor_enable(true);
 					return;
 				}
-				if (event.keyCode == 13)
-				{
+				// Down
+				if (event.keyCode == 38) {
+					textComplete.prev();
+					editor_enable(true);
+					return;
+				}
+				// Enter
+				if (event.keyCode == 13) {
 					textComplete.select();
 					return;
 				}
@@ -623,11 +545,12 @@ var event_handler = {
 				event_handler.active_modifiers.shift = true;
 			}
 			if (textComplete.visible() == true) {
-				if (event.keyCode == 9)
-				{
+				// Tab, Up, Down
+				if (event.keyCode == 9 || event.keyCode == 38 || event.keyCode == 40) {
 					editor_enable(false);
 					return false;
 				}
+				// Enter
 				if (event.keyCode == 13)
 					return false;
 			}
@@ -638,7 +561,6 @@ var event_handler = {
 
 textComplete.init();
 event_handler.init();
-// dictionary.init()
 dict.init();
 editor_focus();
 
