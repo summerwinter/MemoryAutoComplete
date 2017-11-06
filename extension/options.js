@@ -46,19 +46,7 @@ $(document).ready(function() {
         });
     });
 
-    $("#add_data_btn").click(function() {
-        var val = $("#auto_complete_data_textarea").val();
-        val = val.replace("\n", ",");
-        val = val.replace(" ", "");
-        if (val.length == 0) {
-            alert("No valid input!");
-            return;
-        }
-        var keywords = val.split(",");
-        if (keywords.length == 0) {
-            alert("No valid input!");
-            return;
-        }
+    function add_keywords(keywords) {
         var key = $("#auto_complete_url_keys_select_for_configure").val();
         chrome.storage.local.get(key, function(items) {
             var cur_vals = {};
@@ -89,6 +77,31 @@ $(document).ready(function() {
                 alert("add data successed!");
             });
         });
+    }
+
+    $("#add_data_btn").click(function() {
+        var val = $("#auto_complete_data_textarea").val();
+        val = val.replace("\n", ",");
+        val = val.replace(" ", "");
+        if (val.length == 0) {
+            alert("No valid input!");
+            return;
+        }
+        var keywords = val.split(",");
+        if (keywords.length == 0) {
+            alert("No valid input!");
+            return;
+        }
+        add_keywords(keywords);
+    });
+
+    $("#add_special_data_btn").click(function() {
+        var val = $("#auto_complete_data_textarea").val();
+        if (val.length == 0) {
+            alert("No valid input!");
+            return;
+        }
+        add_keywords([val]);
     });
 
     $("#auto_complete_url_vals").on("click", "li span.extension-word-del", function(e) {
